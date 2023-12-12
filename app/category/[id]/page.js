@@ -3,11 +3,9 @@ import getServicesByCat from "@/utils/getServicesByCat"
 import Layout from "@/components/layout/layout"
 import SideBarFilter from "@/components/sidebar-filter/SideBarFilter"
 import ListAllService from "@/components/list-all-service/ListAllService"
-import { revalidateTag } from 'next/cache'
 
 export async function generateStaticParams() {
   const allCat = await getCategory()
-  revalidateTag('allCat')
   return allCat.map((cat) => ({
     id: cat._id,
   }))
@@ -15,7 +13,6 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params: { id } }) {
   const allCat = await getCategory()
-  revalidateTag('allCat')
   const [currentCat] = await allCat.filter(item => item._id === id)
   return {
     title: `${currentCat.name} Service`,
@@ -25,10 +22,8 @@ export async function generateMetadata({ params: { id } }) {
 
 export default async function Page({ params: { id } }) {
   const allCat = await getCategory()
-  revalidateTag('allCat')
   const [currentCat] = await allCat.filter(item => item._id === id)
   const allServices = await getServicesByCat(id)
-  revalidateTag('serviceByCat')
   let content;
   if (allServices.length === 0) {
     content = <h2 className="font-sans italic text-sm bg-gray-dark text-white px-4 py-2 rounded">No Service Found for {currentCat.name}</h2>

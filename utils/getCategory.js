@@ -3,6 +3,7 @@ export default async function getCategory() {
     if (!res.ok) {
         throw new Error('Failed to fetch data')
     }
+    revalidateTag('allCat')
     return res.json()
 }
 

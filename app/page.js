@@ -6,7 +6,6 @@ import { revalidateTag } from 'next/cache'
 
 export default async function Home() {
   const category = await getCategory()
-  revalidateTag('allCat')
   const activeCat = category.filter(item => item.catstatus === true).reverse()
   return (
     <Layout title={`Active Services (${activeCat.length})`}>
