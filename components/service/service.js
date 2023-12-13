@@ -9,6 +9,8 @@ import { MdError } from "react-icons/md";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays, subDays } from 'date-fns';
+import { LuAlignVerticalSpaceAround } from "react-icons/lu";
+
 
 
 const bookingSchema = Yup.object().shape({
@@ -27,6 +29,7 @@ const bookingSchema = Yup.object().shape({
 export default function Service({ _id, name, cost, description, images, category, createdBy, servicestatus, createdAt }) {
 
     let [isOpen, setIsOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [showMessage, setShowMessage] = useState({
         status: false,
         message: "",
@@ -34,6 +37,7 @@ export default function Service({ _id, name, cost, description, images, category
     })
 
     const handleBook = async ({ serviceId, categoryId, serviceCratedBy, firstName, lastName, email, dateTime }) => {
+        setIsLoading(true)
         const res = await fetch(`https://multilevelapp-api.vercel.app/api/v1/global/customer/add`, {
             method: 'POST',
             headers: {
@@ -42,6 +46,7 @@ export default function Service({ _id, name, cost, description, images, category
             body: JSON.stringify({ serviceId, categoryId, serviceCratedBy, firstName, lastName, email, dateTime })
         })
         if (!res.ok) {
+            setIsLoading(false)
             setShowMessage(prev => ({
                 ...prev,
                 status: true,
@@ -49,6 +54,7 @@ export default function Service({ _id, name, cost, description, images, category
                 type: 0
             }))
         }
+        setIsLoading(false)
         setShowMessage(prev => ({
             ...prev,
             status: true,
@@ -80,9 +86,16 @@ export default function Service({ _id, name, cost, description, images, category
                 className="relative z-50"
             >
                 <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-[rgba(0,0,0,.5)]">
-                    <Dialog.Panel className="w-full max-w-xl rounded bg-white p-4">
+                    <Dialog.Panel className="w-full max-w-xl rounded bg-white p-4 relative">
                         {showMessage.status !== true ?
                             <>
+                                {isLoading && 
+                                <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full bg-[rgba(255,255,255,.8)] z-10 flex justify-center items-center">
+                                    <div className="text-center">
+                                        <LuAlignVerticalSpaceAround className="text-4xl text-active mx-auto animate-bounce" />
+                                        <span className="block pt-2 text-sm animate-pulse">Booking in progress. Please wait patiently.</span>
+                                    </div>
+                                </div>}
                                 <Dialog.Title className="font-bold font-sans text-sm">Complete Booking</Dialog.Title>
                                 <Formik
                                     initialValues={{
