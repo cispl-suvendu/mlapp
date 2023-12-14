@@ -3,7 +3,6 @@ import getServicesByCat from "@/utils/getServicesByCat"
 import Layout from "@/components/layout/layout"
 import SideBarFilter from "@/components/sidebar-filter/SideBarFilter"
 import ListAllService from "@/components/list-all-service/ListAllService"
-import { revalidatePath } from "next/cache"
 
 export async function generateStaticParams() {
   const allCat = await getCategory()
@@ -25,7 +24,6 @@ export default async function Page({ params: { id } }) {
   const allCat = await getCategory()
   const [currentCat] = await allCat.filter(item => item._id === id)
   const allServices = await getServicesByCat(id)
-  revalidatePath(`/category/${id}`)
   let content;
   if (allServices.length === 0) {
     content = <h2 className="font-sans italic text-sm bg-gray-dark text-white px-4 py-2 rounded">No Service Found for {currentCat.name}</h2>
