@@ -3,6 +3,7 @@ import getServicesByCat from "@/utils/getServicesByCat"
 import Layout from "@/components/layout/layout"
 import SideBarFilter from "@/components/sidebar-filter/SideBarFilter"
 import ListAllService from "@/components/list-all-service/ListAllService"
+import Title from "@/components/layout/Title"
 
 export async function generateStaticParams() {
   const allCat = await getCategory()
@@ -40,7 +41,8 @@ export default async function Page({ params: { id } }) {
     </div>
   }
   return (
-    <Layout title={`${currentCat.name} service`}>
+    <Layout>
+      <Title title={`${currentCat.name} service`} />
       {content}
     </Layout>
   )
